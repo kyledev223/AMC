@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1120" viewBox="0 0 800 1120">
+  <defs>
+    <radialGradient id="g" cx="50%" cy="45%" r="60%">
+      <stop offset="0%" stop-color="#6a1520"/>
+      <stop offset="100%" stop-color="#22100f"/>
+    </radialGradient>
+  </defs>
+  <rect x="8" y="8" width="784" height="1104" rx="44" fill="url(#g)" stroke="#d6b260" stroke-width="8"/>
+  <circle cx="400" cy="520" r="170" fill="none" stroke="#d6b260" stroke-width="8"/>
+  <circle cx="400" cy="520" r="200" fill="none" stroke="#d6b260" stroke-opacity="0.25" stroke-width="22"/>
+  <text x="400" y="590" text-anchor="middle" font-family="UnifrakturMaguntia, 'Old English Text MT', serif" font-size="210" fill="#d6b260">A</text>
+  <text x="400" y="900" text-anchor="middle" font-family="Georgia, serif" font-size="44" fill="#f4ede3">Sealed</text>
+</svg>

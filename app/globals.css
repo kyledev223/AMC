@@ -1,0 +1,486 @@
+@import "tailwindcss";
+
+/* Tokens ported from design-reference/index.html. Single dark theme. */
+@theme {
+  --color-sanctum: #16090b;
+  --color-sanctum-2: #22100f;
+  --color-lacquer: #6a1520;
+  --color-gold: #d6b260;
+  --color-gold-dim: #8f7440;
+  --color-milk: #f4ede3;
+  --color-ash: #b29d97;
+  --color-up: #4fbf68;
+  --color-down: #e2523f;
+
+  --font-display: var(--f-display), "Old English Text MT", "Times New Roman", serif;
+  --font-body: var(--f-body), "Hiragino Sans", "Segoe UI", system-ui, sans-serif;
+  --font-tape: var(--f-tape), ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --text-step--1: 0.875rem;
+  --text-step-0: 1rem;
+  --text-step-1: 1.25rem;
+  --text-step-2: 1.6rem;
+  --text-step-3: 2.4rem;
+  --text-step-4: clamp(3rem, 9vw, 7.5rem);
+}
+
+:root {
+  --sanctum: #16090b;
+  --sanctum-2: #22100f;
+  --lacquer: #6a1520;
+  --gold: #d6b260;
+  --gold-dim: #8f7440;
+  --milk: #f4ede3;
+  --ash: #b29d97;
+  --up: #4fbf68;
+  --down: #e2523f;
+  --gutter-l: max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(16px, env(safe-area-inset-right, 0px));
+  color-scheme: dark;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--sanctum);
+    color: var(--milk);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+  img { max-width: 100%; display: block; }
+  a { color: var(--gold); }
+  :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 2px; }
+  h1, h2, h3 { text-wrap: balance; }
+  ::selection { background: var(--lacquer); color: var(--milk); }
+}
+
+@layer components {
+  .wrap {
+    max-width: 1180px;
+    margin-inline: auto;
+    padding-left: var(--gutter-l);
+    padding-right: var(--gutter-r);
+  }
+
+  .mono { font-family: var(--font-tape); font-variant-numeric: tabular-nums; }
+
+  /* Gold pill buttons */
+  .btn {
+    font: 700 0.875rem/1 var(--font-body);
+    padding: 13px 20px;
+    border-radius: 999px;
+    border: 1.5px solid var(--gold);
+    background: var(--gold);
+    color: var(--sanctum);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    white-space: nowrap;
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+  .btn:hover { background: var(--milk); border-color: var(--milk); }
+  .btn-ghost { background: transparent; color: var(--gold); }
+  .btn-ghost:hover { color: var(--sanctum); background: var(--gold); border-color: var(--gold); }
+  .btn-sm { padding: 9px 14px; font-size: 0.8125rem; }
+  .btn-lg { padding: 16px 28px; font-size: 1rem; }
+  .btn:disabled, .btn[aria-disabled="true"] { opacity: 0.55; cursor: not-allowed; }
+  .btn:disabled:hover, .btn[aria-disabled="true"]:hover { background: var(--gold); border-color: var(--gold); color: var(--sanctum); }
+  .btn-ghost:disabled:hover, .btn-ghost[aria-disabled="true"]:hover { background: transparent; color: var(--gold); }
+
+  /* Section headings */
+  .room { padding-block: clamp(56px, 9vw, 112px); }
+  .room-title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: var(--text-step-3);
+    line-height: 1.05;
+    color: var(--gold);
+  }
+  .page-title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    line-height: 1;
+    color: var(--milk);
+    text-shadow: 0 2px 0 var(--lacquer), 0 0 40px color-mix(in srgb, var(--gold) 25%, transparent);
+  }
+  .intro { margin-top: 12px; max-width: 38em; color: var(--ash); font-size: 1.125rem; line-height: 1.55; }
+
+  .panel {
+    border: 1.5px solid color-mix(in srgb, var(--gold) 22%, transparent);
+    border-radius: 14px;
+    background: var(--sanctum-2);
+  }
+
+  .note {
+    padding: 16px 18px;
+    border: 1px dashed var(--gold-dim);
+    border-radius: 8px;
+    color: var(--ash);
+    font-size: 0.875rem;
+  }
+
+  .sigil {
+    width: 34px; height: 34px; border-radius: 50%;
+    display: grid; place-items: center; flex: none;
+    border: 1.5px solid var(--gold);
+    color: var(--gold);
+    font-family: var(--font-display); font-size: 1.15rem; line-height: 1;
+  }
+
+  /* Numbered steps: a real sequence */
+  .steps { list-style: none; padding: 0; margin: 32px 0 0; display: grid; gap: 22px; counter-reset: s; }
+  .steps > li { display: grid; grid-template-columns: 44px 1fr; gap: 16px; counter-increment: s; }
+  .steps > li::before {
+    content: counter(s);
+    width: 44px; height: 44px; border-radius: 50%;
+    display: grid; place-items: center;
+    border: 1.5px solid var(--gold);
+    color: var(--gold);
+    font-family: var(--font-display); font-size: 1.4rem; line-height: 1;
+  }
+  .steps h3 { font-size: 1.25rem; font-weight: 700; line-height: 1.35; }
+  .steps p { color: var(--ash); margin-top: 4px; }
+
+  /* Tables */
+  .ledger { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+  .ledger th { text-align: left; font-weight: 500; color: var(--gold-dim); padding: 10px 12px; border-bottom: 1px solid color-mix(in srgb, var(--gold) 22%, transparent); white-space: nowrap; }
+  .ledger td { padding: 11px 12px; border-bottom: 1px solid color-mix(in srgb, var(--gold) 10%, transparent); vertical-align: middle; }
+  .ledger td.num, .ledger th.num { text-align: right; font-family: var(--font-tape); font-variant-numeric: tabular-nums; }
+  .ledger tbody tr:hover { background: color-mix(in srgb, var(--lacquer) 18%, transparent); }
+
+  .tabs { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--gold) 25%, transparent); }
+  .tabs button { font: 600 0.8125rem/1 var(--font-tape); padding: 8px 12px; border-radius: 999px; color: var(--ash); background: none; border: 0; cursor: pointer; }
+  .tabs button[aria-selected="true"] { background: var(--gold); color: var(--sanctum); }
+  .tabs button:hover:not([aria-selected="true"]) { color: var(--milk); }
+
+  .field {
+    width: 100%;
+    font: 400 0.9375rem/1.4 var(--font-tape);
+    padding: 11px 14px;
+    border-radius: 999px;
+    border: 1.5px solid color-mix(in srgb, var(--gold) 30%, transparent);
+    background: var(--sanctum);
+    color: var(--milk);
+  }
+  .field::placeholder { color: color-mix(in srgb, var(--ash) 70%, transparent); }
+  .field:focus-visible { border-color: var(--gold); outline-offset: 2px; }
+
+  .prose-cult p, .prose-cult li { color: var(--ash); }
+  .prose-cult p + p { margin-top: 12px; }
+  .prose-cult strong { color: var(--milk); font-weight: 700; }
+  .prose-cult h3 { font-size: 1.25rem; font-weight: 700; color: var(--milk); margin-top: 28px; margin-bottom: 8px; }
+  .prose-cult ul { list-style: disc; padding-left: 1.2em; margin-top: 8px; display: grid; gap: 6px; }
+  .prose-cult code { font-family: var(--font-tape); font-size: 0.85em; color: var(--milk); overflow-wrap: anywhere; }
+}
+
+/* ---------- Halo ---------- */
+.halo {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  box-shadow: 0 0 0 10px color-mix(in srgb, var(--gold) 8%, transparent), 0 0 80px color-mix(in srgb, var(--gold) 30%, transparent);
+  aspect-ratio: 1;
+  pointer-events: none;
+}
+.halo::before {
+  content: "";
+  position: absolute; inset: -9%;
+  border-radius: 50%;
+  background: repeating-conic-gradient(from 0deg, var(--gold) 0deg 1.2deg, transparent 1.2deg 15deg);
+  -webkit-mask: radial-gradient(circle, transparent 60%, #000 61%, #000 70%, transparent 71%);
+          mask: radial-gradient(circle, transparent 60%, #000 61%, #000 70%, transparent 71%);
+  opacity: 0.8;
+}
+
+/* ---------- Hero sun ---------- */
+.sun { position: absolute; aspect-ratio: 1; pointer-events: none; }
+.sun > * { position: absolute; border-radius: 50%; }
+.sun-aura {
+  inset: -48%;
+  background: radial-gradient(circle closest-side,
+    color-mix(in srgb, var(--gold) 34%, transparent) 0%,
+    color-mix(in srgb, var(--gold) 16%, transparent) 34%,
+    color-mix(in srgb, var(--lacquer) 45%, transparent) 52%,
+    transparent 100%);
+}
+/* Rays are masked to start just outside the ring and fade outward. */
+.sun-rays-major {
+  inset: -50%;
+  background: repeating-conic-gradient(from -1deg, color-mix(in srgb, var(--gold) 72%, transparent) 0deg 2deg, transparent 2deg 22.5deg);
+  -webkit-mask: radial-gradient(circle closest-side, transparent 50.5%, #000 53%, rgba(0,0,0,0.3) 74%, transparent 92%);
+          mask: radial-gradient(circle closest-side, transparent 50.5%, #000 53%, rgba(0,0,0,0.3) 74%, transparent 92%);
+}
+.sun-rays-minor {
+  inset: -34%;
+  background: repeating-conic-gradient(from 10.6deg, color-mix(in srgb, var(--gold) 70%, transparent) 0deg 0.8deg, transparent 0.8deg 7.5deg);
+  -webkit-mask: radial-gradient(circle closest-side, transparent 62%, #000 64.5%, transparent 96%);
+          mask: radial-gradient(circle closest-side, transparent 62%, #000 64.5%, transparent 96%);
+}
+.sun-disc {
+  inset: 0;
+  background: radial-gradient(circle closest-side at 50% 48%,
+    rgba(250, 226, 160, 0.62) 0%,
+    color-mix(in srgb, var(--gold) 40%, transparent) 26%,
+    color-mix(in srgb, var(--lacquer) 78%, transparent) 66%,
+    color-mix(in srgb, var(--lacquer) 92%, var(--sanctum)) 100%);
+}
+.sun-ring {
+  inset: 0;
+  border: 2px solid var(--gold);
+  box-shadow:
+    0 0 0 9px color-mix(in srgb, var(--gold) 7%, transparent),
+    0 0 46px color-mix(in srgb, var(--gold) 45%, transparent),
+    inset 0 0 38px color-mix(in srgb, var(--gold) 30%, transparent);
+}
+.sun-ring::before {
+  content: ""; position: absolute; inset: 5.5%; border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+}
+.sun-ring::after {
+  content: ""; position: absolute; inset: -7%; border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--gold) 28%, transparent);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sun-rays-major { animation: sun-turn 200s linear infinite; }
+  .sun-rays-minor { animation: sun-turn 280s linear infinite reverse; }
+  .sun-aura { animation: sun-breathe 7s ease-in-out infinite; }
+}
+@keyframes sun-turn { to { rotate: 360deg; } }
+@keyframes sun-breathe { 0%, 100% { opacity: 0.85; } 50% { opacity: 1; } }
+
+/* ---------- Hero altar ---------- */
+.altar { position: relative; text-align: center; padding-top: 28px; isolation: isolate; overflow-x: clip; }
+.altar::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(60% 55% at 50% 62%, color-mix(in srgb, var(--lacquer) 70%, transparent) 0%, transparent 70%);
+  z-index: -2;
+}
+.kana {
+  position: absolute; top: 40px;
+  writing-mode: vertical-rl;
+  font-weight: 900; letter-spacing: 0.3em;
+  color: var(--gold-dim);
+  font-size: 0.875rem;
+}
+.kana.l { left: var(--gutter-l); }
+.kana.r { right: var(--gutter-r); }
+.hero-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--text-step-4);
+  line-height: 0.95;
+  color: var(--milk);
+  text-shadow: 0 2px 0 var(--lacquer), 0 0 40px color-mix(in srgb, var(--gold) 25%, transparent);
+}
+.ticker-name { margin-top: 14px; font-family: var(--font-tape); font-size: 0.875rem; color: var(--gold); letter-spacing: 0.12em; }
+.lede { max-width: 34em; margin: 16px auto 0; color: var(--ash); font-size: 1.25rem; line-height: 1.55; text-shadow: 0 1px 14px var(--sanctum), 0 0 4px var(--sanctum); }
+.ticker-name { text-shadow: 0 0 10px var(--sanctum); }
+.altar .btn-ghost:not(:hover) { background: color-mix(in srgb, var(--sanctum) 82%, transparent); }
+
+.lineup { position: relative; width: min(1100px, 100%); margin: 10px auto 0; aspect-ratio: 16 / 9; max-width: 100%; }
+.lineup .sun { left: 50%; top: 1%; width: 44%; translate: -50% 0; z-index: 0; }
+.lineup-girl {
+  position: absolute; bottom: 0; translate: -50% 0;
+  display: block;
+  filter: drop-shadow(0 18px 24px rgba(0,0,0,0.55));
+  transition: translate 0.25s ease, filter 0.25s ease;
+}
+.lineup-girl img { width: 100%; height: auto; }
+.lineup-girl:hover, .lineup-girl:focus-visible { translate: -50% -3%; filter: drop-shadow(0 18px 24px rgba(0,0,0,0.55)) drop-shadow(0 0 18px color-mix(in srgb, var(--gold) 45%, transparent)); }
+.lineup-girl[data-pos="c1"] { left: 41%; width: 27%; z-index: 5; }
+.lineup-girl[data-pos="c2"] { left: 59%; width: 27%; z-index: 5; }
+.lineup-girl[data-pos="m1"] { left: 24%; width: 23%; z-index: 4; bottom: 4%; }
+.lineup-girl[data-pos="m2"] { left: 76%; width: 23%; z-index: 4; bottom: 4%; }
+.lineup-girl[data-pos="o1"] { left: 9%; width: 20%; z-index: 3; bottom: 8%; }
+.lineup-girl[data-pos="o2"] { left: 91%; width: 20%; z-index: 3; bottom: 8%; }
+.lineup::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: 0; height: 18%;
+  background: linear-gradient(to bottom, transparent, var(--sanctum));
+  z-index: 6; pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .lineup-girl { animation: rise 0.9s cubic-bezier(.2,.8,.2,1) backwards; }
+  .lineup-girl[data-pos="c1"], .lineup-girl[data-pos="c2"] { animation-delay: 0.05s; }
+  .lineup-girl[data-pos="m1"], .lineup-girl[data-pos="m2"] { animation-delay: 0.2s; }
+  .lineup-girl[data-pos="o1"], .lineup-girl[data-pos="o2"] { animation-delay: 0.35s; }
+  .lineup .sun { animation: glow 1.4s ease backwards; }
+}
+@keyframes rise { from { opacity: 0; translate: -50% 12%; } to { opacity: 1; translate: -50% 0; } }
+@keyframes glow { from { opacity: 0; scale: 0.85; } to { opacity: 1; scale: 1; } }
+@media (max-width: 720px) {
+  .kana { display: none; }
+  .lineup { aspect-ratio: 4 / 3.4; }
+  .lineup .sun { width: 62%; }
+  .lineup-girl[data-pos="c1"] { left: 37%; width: 40%; }
+  .lineup-girl[data-pos="c2"] { left: 63%; width: 40%; }
+  .lineup-girl[data-pos="m1"] { left: 18%; width: 33%; }
+  .lineup-girl[data-pos="m2"] { left: 82%; width: 33%; }
+  .lineup-girl[data-pos="o1"] { left: 5%; width: 26%; }
+  .lineup-girl[data-pos="o2"] { left: 95%; width: 26%; }
+}
+
+/* ---------- Ticker tape ---------- */
+.tape { border-block: 1.5px solid var(--gold-dim); background: var(--sanctum-2); overflow: hidden; position: relative; z-index: 7; }
+.tape-track { display: flex; width: max-content; font-family: var(--font-tape); font-size: 0.875rem; padding-block: 12px; }
+.tape-track > span { padding-inline: 22px; white-space: nowrap; color: var(--ash); }
+.tape-track b { color: var(--milk); font-weight: 600; }
+.tape-track .u { color: var(--up); }
+.tape-track .d { color: var(--down); }
+@media (prefers-reduced-motion: no-preference) {
+  .tape-track { animation: crawl 48s linear infinite; }
+}
+@keyframes crawl { to { transform: translateX(-50%); } }
+
+/* ---------- Girl cards ---------- */
+.card-scene { perspective: 900px; }
+.girl-card {
+  --rx: 0deg; --ry: 0deg; --mx: 50%; --my: 50%;
+  position: relative;
+  aspect-ratio: 5 / 7;
+  border-radius: 16px;
+  overflow: hidden;
+  isolation: isolate;
+  background: radial-gradient(80% 70% at 50% 30%, color-mix(in srgb, var(--lacquer) 80%, transparent), var(--sanctum-2) 85%);
+  border: 2px solid var(--gold-dim);
+  transform: rotateX(var(--rx)) rotateY(var(--ry));
+  transform-style: preserve-3d;
+  transition: transform 0.35s cubic-bezier(.2,.8,.2,1), box-shadow 0.35s ease;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+  touch-action: pan-y;
+}
+.girl-card[data-active="true"] { transition: transform 0.08s linear, box-shadow 0.35s ease; }
+.girl-card .art {
+  position: absolute; left: -12%; right: -12%; top: 2%;
+  transform: translate3d(calc((var(--mx) - 50%) * -0.06), calc((var(--my) - 50%) * -0.04), 0);
+  transition: transform 0.35s ease;
+  z-index: 1;
+}
+.girl-card .art img { width: 100%; height: auto; filter: drop-shadow(0 14px 18px rgba(0,0,0,0.55)); }
+.girl-card .card-halo { left: 50%; top: 2%; width: 88%; translate: -50% 0; z-index: 0; opacity: 0.95; }
+.girl-card .plate {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 3;
+  padding: 36px 14px 12px;
+  background: linear-gradient(to top, var(--sanctum) 45%, transparent);
+  text-align: left;
+}
+.girl-card .shine {
+  position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background: radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,0.16), transparent 45%);
+  mix-blend-mode: soft-light;
+}
+.girl-card[data-tier="devoted"] { border-color: var(--gold); }
+.girl-card[data-tier="gilded"] {
+  border-color: var(--gold);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.45), 0 0 0 1px color-mix(in srgb, var(--gold) 60%, transparent) inset, 0 0 24px color-mix(in srgb, var(--gold) 25%, transparent);
+}
+.girl-card[data-tier="gilded"] .foil {
+  position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background: linear-gradient(115deg, transparent 30%, color-mix(in srgb, var(--gold) 55%, transparent) 45%, rgba(255,240,200,0.55) 50%, color-mix(in srgb, var(--gold) 55%, transparent) 55%, transparent 70%);
+  background-size: 250% 250%;
+  background-position: calc(var(--mx) * 1.2) 50%;
+  mix-blend-mode: overlay;
+  opacity: 0.75;
+}
+.girl-card[data-tier="divine"] {
+  border-color: transparent;
+  background:
+    radial-gradient(80% 70% at 50% 30%, color-mix(in srgb, var(--lacquer) 80%, transparent), var(--sanctum-2) 85%) padding-box,
+    conic-gradient(from var(--holo-angle, 0deg), #d6b260, #f4ede3, #8fd3c8, #b49be8, #e8a0b4, #d6b260) border-box;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.45), 0 0 34px color-mix(in srgb, var(--gold) 45%, transparent), 0 0 70px color-mix(in srgb, #b49be8 25%, transparent);
+}
+.girl-card[data-tier="divine"] .foil {
+  position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background:
+    repeating-linear-gradient(115deg, rgba(255,120,180,0.32) 0%, rgba(255,230,140,0.32) 8%, rgba(140,255,220,0.32) 16%, rgba(140,170,255,0.32) 24%, rgba(255,120,180,0.32) 32%);
+  background-size: 300% 300%;
+  background-position: var(--mx) var(--my);
+  mix-blend-mode: color-dodge;
+  opacity: 0.7;
+}
+@property --holo-angle { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+@media (prefers-reduced-motion: no-preference) {
+  .girl-card[data-tier="gilded"] .foil { animation: sheen 5s ease-in-out infinite; }
+  .girl-card[data-tier="divine"] { animation: holo-spin 6s linear infinite; }
+  .girl-card[data-tier="divine"] .foil { animation: holo-drift 7s linear infinite; }
+}
+@keyframes sheen { 0%, 100% { background-position: 120% 50%; } 50% { background-position: -20% 50%; } }
+@keyframes holo-spin { to { --holo-angle: 360deg; } }
+@keyframes holo-drift { to { background-position: 300% 300%; } }
+@media (prefers-reduced-motion: reduce) {
+  .girl-card, .girl-card .art { transition: none; transform: none; }
+}
+
+/* Carousel */
+.rail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(200px, 240px);
+  gap: 18px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  padding: 24px 4px 28px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gold-dim) transparent;
+}
+.rail > * { scroll-snap-align: start; }
+@media (max-width: 520px) { .rail { grid-auto-columns: 72%; } }
+
+/* ---------- Mint reveal ---------- */
+.reveal-stage { position: relative; display: grid; place-items: center; min-height: 460px; isolation: isolate; }
+.reveal-stage .halo { width: min(360px, 80%); top: 6%; left: 50%; translate: -50% 0; z-index: 0; }
+.reveal-rays {
+  position: absolute; left: 50%; top: 42%; width: 140%; aspect-ratio: 1; translate: -50% -50%;
+  background: repeating-conic-gradient(from 0deg, color-mix(in srgb, var(--gold) 55%, transparent) 0deg 2deg, transparent 2deg 12deg);
+  -webkit-mask: radial-gradient(circle, #000 0%, transparent 62%);
+          mask: radial-gradient(circle, #000 0%, transparent 62%);
+  opacity: 0; z-index: 0; pointer-events: none;
+}
+.reveal-card { width: min(280px, 78vw); perspective: 1200px; z-index: 2; }
+.reveal-flip { position: relative; transform-style: preserve-3d; transition: transform 0.9s cubic-bezier(.3,.7,.2,1); }
+.reveal-flip[data-flipped="true"] { transform: rotateY(180deg); }
+.reveal-face { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.reveal-back { position: absolute; inset: 0; transform: rotateY(180deg); }
+.card-back {
+  aspect-ratio: 5 / 7; border-radius: 16px; border: 2px solid var(--gold);
+  background:
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--lacquer) 90%, transparent), var(--sanctum-2) 70%),
+    var(--sanctum-2);
+  display: grid; place-items: center;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.5);
+}
+.card-back .sigil { width: 96px; height: 96px; font-size: 3.6rem; border-width: 2px; }
+@media (prefers-reduced-motion: no-preference) {
+  .reveal-stage[data-phase="spin"] .reveal-flip { animation: spin-down 1.6s cubic-bezier(.5,0,.3,1) infinite; }
+  .reveal-stage[data-phase="flare"] .reveal-rays { animation: flare 1.2s ease-out forwards; }
+  .reveal-stage[data-phase="flare"][data-tier="gilded"] .reveal-rays { animation: flare-strong 1.4s ease-out forwards; }
+  .reveal-stage[data-phase="flare"][data-tier="divine"] .reveal-rays {
+    background: repeating-conic-gradient(from 0deg, rgba(255,140,190,0.6) 0deg 2deg, transparent 2deg 6deg, rgba(140,255,220,0.6) 6deg 8deg, transparent 8deg 12deg, rgba(180,155,232,0.6) 12deg 14deg, transparent 14deg 18deg);
+    animation: flare-strong 1.6s ease-out forwards;
+  }
+  .reveal-stage[data-phase="done"] .reveal-rays { opacity: 0.35; transition: opacity 1s ease; }
+  .reveal-stage[data-phase="done"][data-tier="devoted"] .reveal-rays { opacity: 0.15; }
+}
+@keyframes spin-down { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+@keyframes flare { 0% { opacity: 0; scale: 0.4; } 40% { opacity: 0.7; } 100% { opacity: 0.2; scale: 1; rotate: 20deg; } }
+@keyframes flare-strong { 0% { opacity: 0; scale: 0.3; } 35% { opacity: 1; } 100% { opacity: 0.45; scale: 1.15; rotate: 35deg; } }
+
+/* Modal */
+.modal-backdrop { position: fixed; inset: 0; z-index: 50; background: color-mix(in srgb, #000 70%, transparent); display: grid; place-items: center; padding: 16px; overflow-y: auto; }
+.modal-panel { width: min(560px, 100%); max-height: calc(100dvh - 32px); overflow-y: auto; }
+
+.toast {
+  position: fixed; left: 50%; translate: -50% 0;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  background: var(--gold); color: var(--sanctum);
+  font-weight: 700; font-size: 0.875rem;
+  padding: 10px 18px; border-radius: 999px;
+  z-index: 60;
+}

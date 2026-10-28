@@ -1,0 +1,165 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/// A confirmed mint. Written only after the server has verified the burn and the asset on chain.
+model Mint {
+  assetId    String   @id
+  owner      String // minter, then refreshed from chain at every snapshot
+  minter     String
+  series     String
+  tier       String
+  serial     Int
+  milkRate   Int // mL/s, base rate x tier multiplier
+  burnTx     String   @unique
+  burnAmount BigInt // base units of $AMC
+  seedCommit String
+  seedReveal String
+  blockhash  String
+  roll       String // hex of sha256(seed + wallet + blockhash)
+  createdAt  DateTime @default(now())
+
+  shares Share[]
+
+  @@unique([series, serial])
+  @@index([owner])
+  @@index([createdAt])
+}
+
+/// sha256(seed) is published before the user signs anything. The seed is revealed on the girl's page.
+model SeedCommit {
+  id        String   @id @default(cuid())
+  wallet    String
+  seed      String
+  commit    String   @unique
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  @@index([wallet])
+}
+
+/// A built but not yet confirmed mint transaction. Holds the reserved serial.
+model PendingMint {
+  assetId              String    @id
+  wallet               String
+  commitId             String    @unique
+  series               String
+  tier                 String
+  serial               Int
+  milkRate             Int
+  blockhash            String
+  lastValidBlockHeight BigInt
+  roll                 String
+  messageHash          String
+  signature            String?
+  createdAt            DateTime  @default(now())
+  expiresAt            DateTime
+  submittedAt          DateTime?
+
+  @@unique([series, serial])
+  @@index([wallet])
+}
+
+/// One distribution window. id = floor(unix seconds / 600).
+model Epoch {
+  id          Int       @id
+  startedAt   DateTime  @default(now())
+  finishedAt  DateTime?
+  status      String // computing | paying | complete | skipped | failed
+  asset       String // SOL | AMC_TOKENIZED
+  dryRun      Boolean   @default(false)
+  poolAmount  BigInt    @default(0) // distributable amount this epoch, base units
+  carryIn     BigInt    @default(0) // dust owed from earlier epochs, included in payouts
+  totalMilk   BigInt    @default(0)
+  girls       Int       @default(0)
+  holders     Int       @default(0)
+  lockedUntil DateTime?
+  note        String?
+
+  payouts Payout[]
+  shares  Share[]
+
+  @@index([status])
+}
+
+/// One transfer to one wallet in one epoch.
+model Payout {
+  id         String    @id @default(cuid())
+  epochId    Int
+  wallet     String
+  amount     BigInt
+  asset      String
+  decimals   Int       @default(9)
+  milk       BigInt // wallet's milk at the snapshot
+  txSig      String?
+  lastValidBlockHeight BigInt?
+  status     String // pending | sending | sent | dry_run | failed (failed amounts move to Carry)
+  attempts   Int       @default(0)
+  error      String?
+  createdAt  DateTime  @default(now())
+  sentAt     DateTime?
+
+  epoch Epoch @relation(fields: [epochId], references: [id])
+
+  @@unique([epochId, wallet])
+  @@index([wallet, createdAt])
+  @@index([status])
+  @@index([createdAt])
+}
+
+/// Per-girl slice of an epoch. Drives each girl's lifetime earnings and payout history.
+model Share {
+  epochId  Int
+  assetId  String
+  wallet   String
+  milkRate Int
+  amount   BigInt
+
+  epoch Epoch @relation(fields: [epochId], references: [id])
+  mint  Mint  @relation(fields: [assetId], references: [assetId])
+
+  @@id([epochId, assetId])
+  @@index([assetId])
+  @@index([wallet])
+}
+
+/// Dust under MIN_PAYOUT, owed to a wallet and paid once it clears the minimum.
+model Carry {
+  wallet    String   @id
+  amount    BigInt
+  asset     String
+  updatedAt DateTime @updatedAt
+}
+
+/// Chart points, written after every mint and every epoch.
+model StatPoint {
+  id        Int      @id @default(autoincrement())
+  timestamp DateTime @default(now())
+  totalMilk BigInt
+  girls     Int
+  burned    BigInt // base units of $AMC
+  paidOut   BigInt // base units of the payout asset
+  pool      BigInt   @default(0)
+
+  @@index([timestamp])
+}
+
+/// Fixed-window rate limiter shared across serverless instances.
+model RateLimit {
+  key         String   @id
+  windowStart DateTime
+  count       Int
+}
+
+/// Runtime switches flipped from the admin route (for example distributions paused).
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
