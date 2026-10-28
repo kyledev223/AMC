@@ -110,7 +110,7 @@ export default async function Home() {
           </div>
           <PayoutsTable
             rows={payouts}
-            empty="The last 20 payouts will show here. The first ones go out in the first distribution after launch, then every 10 minutes."
+            empty="The last 20 payouts will show here. A distribution runs every 10 minutes."
           />
         </div>
       </section>

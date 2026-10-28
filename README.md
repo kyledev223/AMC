@@ -123,7 +123,7 @@ Do not start this without the owner's sign-off. Every step that spends money or 
 4. [ ] Fresh collection authority and pool keypairs generated offline, never reused from devnet. Store them in Vercel env only. Consider a hardware wallet or multisig as the pool's long-term home, sweeping from the hot payout wallet.
 5. [ ] Create the mainnet Core collection with the authority (port `scripts/create-collection.ts`; it refuses to run off devnet on purpose). Fund the authority with ~0.5 SOL for reveal renames.
 6. [ ] Set the token's creator fee recipient to `POOL_WALLET` and confirm the first fees land.
-7. [ ] Set `NEXT_PUBLIC_SOLANA_CLUSTER=mainnet-beta`, `NEXT_PUBLIC_AMC_MINT`, `NEXT_PUBLIC_COLLECTION_ADDRESS`, `NEXT_PUBLIC_SITE_URL` (final domain: it is baked into every NFT's metadata URI), `MINT_COST_AMC`, `MIN_PAYOUT`, `GAS_RESERVE_SOL`, `NEXT_PUBLIC_X_URL`, `NEXT_PUBLIC_BUY_URL`.
+7. [ ] Set `NEXT_PUBLIC_SOLANA_CLUSTER=mainnet-beta`, `NEXT_PUBLIC_AMC_MINT`, `NEXT_PUBLIC_COLLECTION_ADDRESS`, `NEXT_PUBLIC_SITE_URL` (final domain: it is baked into every NFT's metadata URI), `MINT_COST_AMC`, `MIN_PAYOUT`, `GAS_RESERVE_SOL`.
 8. [ ] Long random `CRON_SECRET` and `ADMIN_SECRET`. Vercel Pro is on and the cron shows in the dashboard.
 9. [ ] Deploy with `DISTRIBUTIONS_ENABLED=false`. Do one real mint with a team wallet, then check the burn on Solscan, the girl page, the metadata JSON and the on-chain rename.
 10. [ ] Set `DISTRIBUTIONS_ENABLED=true` with `DRY_RUN=true` and watch several epochs. Compare the dry-run payouts with a manual calculation.

@@ -22,8 +22,8 @@ const DEFAULT_RPC: Record<Cluster, string> = {
 export const PUBLIC_RPC_URL = process.env.NEXT_PUBLIC_RPC_URL || DEFAULT_RPC[CLUSTER];
 export const AMC_MINT = process.env.NEXT_PUBLIC_AMC_MINT ?? "";
 export const COLLECTION_ADDRESS = process.env.NEXT_PUBLIC_COLLECTION_ADDRESS ?? "";
-export const X_URL = process.env.NEXT_PUBLIC_X_URL ?? "";
-export const BUY_URL = process.env.NEXT_PUBLIC_BUY_URL ?? "";
+export const X_HANDLE = "animemilkercult";
+export const X_URL = `https://x.com/${X_HANDLE}`;
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, "");
 
 /** Seconds between distributions. */

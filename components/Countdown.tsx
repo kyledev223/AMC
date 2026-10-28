@@ -16,7 +16,7 @@ export function Countdown({ target, enabled, paused = false }: { target: number;
   }, [enabled]);
 
   if (paused) return <span className="text-base font-bold text-down">Distributions paused</span>;
-  if (!enabled) return <span className="text-base font-bold text-gold">Distributions start at launch</span>;
+  if (!enabled) return <span className="text-base font-bold text-gold">Not running yet</span>;
 
   let text = "--:--";
   if (now !== null) {

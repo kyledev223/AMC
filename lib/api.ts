@@ -23,7 +23,7 @@ export function handleError(err: unknown, where: string) {
   if (err instanceof ZodError) return jsonError(err.issues[0]?.message ?? "Invalid request", 400, "invalid_request");
   if (err instanceof ConfigError) {
     console.error(`[${where}] config:`, err.message);
-    return jsonError("Minting isn't set up on this server yet. Try again after launch.", 503, "not_configured");
+    return jsonError("Minting isn't open yet. Try again later.", 503, "not_configured");
   }
   console.error(`[${where}]`, err instanceof Error ? `${err.name}: ${err.message}` : err);
   return jsonError("Something went wrong on our side. Nothing was charged unless your wallet shows a confirmed transaction. Try again in a minute.", 500, "internal");

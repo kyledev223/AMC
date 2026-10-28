@@ -52,7 +52,7 @@ export function MintFlow({ onNavigate }: { onNavigate?: () => void }) {
   if (!AMC_MINT || !COLLECTION_ADDRESS) {
     return (
       <div className="note">
-        Your wallet is connected. Summoning opens at launch, once the $AMC token and the girl collection are live. Each girl costs {formatInt(mintCostAmc)} $AMC.
+        Your wallet is connected. Summoning isn&rsquo;t open yet. Each girl costs {formatInt(mintCostAmc)} $AMC.
       </div>
     );
   }

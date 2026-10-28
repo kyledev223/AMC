@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Sigil } from "./Sigil";
 import { ConnectButton } from "./ConnectButton";
-import { BuyButton } from "./BuyButton";
+import { XButton } from "./XButton";
 
 const NAV = [
   { href: "/", label: "Home" },
@@ -46,7 +46,7 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <BuyButton className="btn-sm hidden sm:inline-flex" />
+          <XButton className="btn-sm" />
           <ConnectButton />
           <button
             type="button"
@@ -74,9 +74,6 @@ export function Header() {
                 </Link>
               </li>
             ))}
-            <li className="px-1 pt-2 sm:hidden">
-              <BuyButton className="w-full" />
-            </li>
           </ul>
         </nav>
       )}

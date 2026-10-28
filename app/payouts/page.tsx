@@ -50,7 +50,7 @@ export default async function PayoutsPage({ searchParams }: { searchParams: Prom
         empty={
           wallet
             ? "No payouts to this wallet yet. A wallet is paid in the first distribution after it holds a girl, once its share clears the minimum payout."
-            : "Payouts will be listed here, newest first. The first distribution runs after launch, then one every 10 minutes."
+            : "Payouts will be listed here, newest first. A distribution runs every 10 minutes."
         }
       />
 

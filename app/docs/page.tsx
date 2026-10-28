@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { ODDS_TABLE, SERIES, TIERS, formatPercent, tierMultiplier } from "@/lib/girls";
-import { AMC_MINT, CLUSTER, COLLECTION_ADDRESS, EPOCH_SECONDS, solscan } from "@/lib/config";
+import { EPOCH_SECONDS } from "@/lib/config";
 import { env } from "@/lib/env";
 import { formatInt, formatMilk } from "@/lib/format";
-import { CopyButton } from "@/components/CopyButton";
 
 export const dynamic = "force-dynamic";
 
@@ -16,19 +15,12 @@ const TOC = [
   ["fairness", "Fairness"],
   ["faq", "FAQ"],
   ["risks", "Risks"],
-  ["contracts", "Contracts"],
 ] as const;
 
 export default function DocsPage() {
   const e = env();
   const cost = formatInt(e.MINT_COST_AMC);
   const payoutAsset = e.PAYOUT_ASSET === "SOL" ? "SOL" : "tokenized AMC stock";
-
-  const contracts: [string, string, "token" | "account"][] = [
-    ["$AMC token", AMC_MINT, "token"],
-    ["Girl collection (Metaplex Core)", COLLECTION_ADDRESS, "account"],
-    ["Reward pool wallet", e.POOL_WALLET ?? "", "account"],
-  ];
 
   return (
     <div className="wrap py-12 sm:py-16">
@@ -121,7 +113,7 @@ export default function DocsPage() {
         <section id="fees" aria-labelledby="fees-h" className="scroll-mt-6">
           <h2 id="fees-h" className="room-title">Fee flow</h2>
           <ol className="steps">
-            <li><div><h3>Trading fees land in the pool wallet</h3><p>The creator fee from $AMC trades is paid to the pool wallet listed under Contracts.</p></div></li>
+            <li><div><h3>Trading fees land in the pool wallet</h3><p>The creator fee from $AMC trades is paid to the pool wallet.</p></div></li>
             <li><div><h3>The worker takes a snapshot</h3><p>Every {EPOCH_SECONDS / 60} minutes it reads the pool balance, keeps a small reserve for transaction fees, and lists every girl in the collection with her current owner.</p></div></li>
             <li><div><h3>Shares are worked out by milk</h3><p>Your share is your girls&rsquo; total milk divided by the network&rsquo;s total milk. If you hold 2% of the milk, you receive 2% of that distribution.</p></div></li>
             <li><div><h3>{payoutAsset} is sent to each wallet</h3><p>No claim button and no lock-up. Amounts under the minimum ({e.MIN_PAYOUT} {e.PAYOUT_ASSET === "SOL" ? "SOL" : "units"}) are held for you and sent once they add up.</p></div></li>
@@ -168,25 +160,6 @@ export default function DocsPage() {
             <li><strong>Trust.</strong> The pool wallet and collection authority are held by the team. The fairness note above explains what commit-reveal does and doesn&rsquo;t prove.</li>
           </ul>
           <p className="mt-4">This is a parody memecoin. Nothing here is financial advice.</p>
-        </section>
-
-        <section id="contracts" aria-labelledby="contracts-h" className="scroll-mt-6">
-          <h2 id="contracts-h" className="room-title">Contracts</h2>
-          <p className="mt-3">Network: Solana {CLUSTER}. Only these addresses are ours.</p>
-          <div className="mt-6 grid gap-3">
-            {contracts.map(([label, address, kind]) => (
-              <div key={label} className="panel flex flex-wrap items-center gap-3 px-4 py-3.5">
-                <div className="min-w-0 flex-[1_1_240px]">
-                  <p className="text-sm text-gold-dim">{label}</p>
-                  <code className="mono text-sm">{address || "Posts at launch"}</code>
-                </div>
-                <CopyButton value={address} label="Copy" done={`${label} copied`} className="btn-sm" />
-                {address && (
-                  <a className="btn btn-ghost btn-sm" href={solscan(kind, address)} target="_blank" rel="noopener noreferrer">View on Solscan</a>
-                )}
-              </div>
-            ))}
-          </div>
         </section>
       </div>
     </div>
